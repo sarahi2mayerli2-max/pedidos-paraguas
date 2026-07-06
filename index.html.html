@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Pedidos - Paraguas</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            max-width: 450px; 
+            margin: 40px auto; 
+            padding: 25px; 
+            border-radius: 15px; 
+            box-shadow: 0px 4px 20px rgba(0,0,0,0.1); 
+            background-color: #fcfcfc;
+        }
+        h2 { color: #2c3e50; text-align: center; margin-bottom: 20px; }
+        label { display: block; margin-top: 15px; font-weight: bold; color: #34495e; }
+        input, select, button { width: 100%; padding: 12px; margin-top: 6px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; font-size: 15px; }
+        
+        /* Contenedor dinámico para el país */
+        #seccion-pais { display: none; margin-top: 10px; background-color: #f0f4f8; padding: 12px; border-radius: 8px; }
+        
+        button { background-color: #2e86de; color: white; font-weight: bold; border: none; cursor: pointer; margin-top: 20px; transition: 0.2s; }
+        button:hover { background-color: #1a5276; }
+        
+        #resultado { margin-top: 20px; padding: 15px; display: none; border-radius: 8px; text-align: center; font-weight: bold; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <h2>Solicita tu Paraguas 🌧️</h2>
+    
+    <!-- 1. Nombre del Cliente -->
+    <label for="nombre">Tu Nombre:</label>
+    <input type="text" id="nombre" placeholder="Ej. Sarita">
+
+    <!-- 2. Cantidad de paraguas -->
+    <label for="cantidad">¿Cuántos paraguas deseas?:</label>
+    <input type="number" id="cantidad" min="1" max="10" value="1">
+
+    <!-- 3. Tipo de entrega / urgencia -->
+    <label for="Disponibilidad">¿Cuándo lo necesitas?:</label>
+    <select id="urgencia" onchange="controlarOpciones()">
+        <option value="inmediato">¡En este momento! (Modelos disponibles en stock)</option>
+        <option value="con-tiempo">Tengo tiempo (Quiero elegir el país de origen del modelo)</option>
+    </select>
+
+    <!-- 4. Selección de País (Oculto por defecto, se muestra si tienen tiempo) -->
+    <div id="seccion-pais">
+        <label for="pais">Elige el país del que deseas el modelo:</label>
+        <select id="pais">
+            <option value="Ecuador">Ecuador (Modelos locales / Micro-aspersión)</option>
+            <option value="Japón">Japón (Modelos tecnológicos y compactos)</option>
+            <option value="Corea del Sur">Corea del Sur (Diseños modernos y estéticos)</option>
+            <option value="Alemania">Alemania (Modelos ultra resistentes al viento)</option>
+        </select>
+    </div>
+
+    <!-- Botón de acción -->
+    <button onclick="procesarPedido()">Confirmar Pedido 🚀</button>
+
+    <!-- Alerta de éxito o error -->
+    <div id="resultado"></div>
+
+    <script>
+        // Función para mostrar/ocultar los países según la urgencia seleccionada
+        function controlarOpciones() {
+            const urgencia = document.getElementById('urgencia').value;
+            const seccionPais = document.getElementById('seccion-pais');
+            
+            if (urgencia === "con-tiempo") {
+                seccionPais.style.display = "block";
+            } else {
+                seccionPais.style.display = "none";
+            }
+        }
+
+        // Función para procesar y mostrar el resumen del pedido
+        function procesarPedido() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const cantidad = document.getElementById('cantidad').value;
+            const urgencia = document.getElementById('urgencia').value;
+            const pais = document.getElementById('pais').value;
+            const resultadoDiv = document.getElementById('resultado');
+
+            // Validación de que pongan el nombre
+            if (nombre === "") {
+                resultadoDiv.style.backgroundColor = "#f8d7da";
+                resultadoDiv.style.color = "#721c24";
+                resultadoDiv.innerHTML = "❌ Por favor, ingresa tu nombre para procesar el pedido.";
+                resultadoDiv.style.display = "block";
+                return;
+            }
+
+            // Armar la respuesta según la elección
+            resultadoDiv.style.backgroundColor = "#d4edda";
+            resultadoDiv.style.color = "#155724";
+            
+            if (urgencia === "inmediato") {
+                resultadoDiv.innerHTML = `¡Pedido recibido, ${nombre}! 🎉<br> 
+                                           Preparando **${cantidad} paraguas** de los modelos que tenemos listos en stock para entrega inmediata.`;
+            } else {
+                resultadoDiv.innerHTML = `¡Pedido reservado, ${nombre}! 🎉<br> 
+                                           Traeremos tus **${cantidad} paraguas** importados con el diseño exclusivo de **${pais}**. ¡Te avisaremos cuando lleguen!`;
+            }
+            
+            resultadoDiv.style.display = "block";
+        }
+    </script>
+</body>
+</html>
